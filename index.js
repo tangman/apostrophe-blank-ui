@@ -20,10 +20,12 @@ function DragonUI(options, callback) {
   self._schemas = options.schemas;
   self._options = options;
     // Mix in the ability to serve assets and templates
-  self._apos.mixinModuleAssets(self, 'dragon-ui', __dirname, options);
+  self._apos.mixinModuleAssets(self, 'apostrophe-blank-ui', __dirname, options);
   
-  self.pushAsset('stylesheet', 'dragon', { when: 'always' });
+  self.pushAsset('stylesheet', '_index', { when: 'always' });
 
+  //support the default demo page types
+  //default, home, blog
   var pages = {
     'home': 'home',
     'default': 'default',
@@ -32,12 +34,9 @@ function DragonUI(options, callback) {
 
   self.loader = function(req, callback) {
 
-    if (pages[req.page.type]) {
-      //support the default demo page types
-      //default, home, blog
+    if (req.page && pages[req.page.type]) {
       req.template = self.renderer(pages[req.page.type], {});
     }
-    console.log("page:" + JSON.stringify(req.page));
 
     return callback(null);
   };
